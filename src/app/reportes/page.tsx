@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 type Incident = {
   id: number;
   user_id: number | null;
-  created: string;                           // 'YYYY-MM-DD HH:mm:ss'
-  url: string | null;                        // page_url as 'url'
+  created: string;                           
+  url: string | null;                        
   anonymous: "Yes" | "No";
   admin_id: number | null;
-  status: string;                            // viene de JOIN con statuses.name (p.ej. 'Pending')
+  status: string;                            
   published: "Published" | "Unpublished";
   description: string | null;
 };
@@ -24,7 +24,6 @@ export default function ReportesPage() {
   const dtRef = useRef<any>(null);
 
   useEffect(() => {
-
     const controller = new AbortController();
 
     (async () => {
@@ -37,16 +36,15 @@ export default function ReportesPage() {
             (localStorage.getItem("accessToken") || localStorage.getItem("token"))) ||
           "";
 
-       const res = await fetch(`${API_BASE}/admin/reports/incident`, {
-  method: "GET",
-  headers: {
-    Accept: "application/json",                 
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token.replace(/"/g, "")}` } : {}),
-  },
-  signal: controller.signal,
-});
-
+        const res = await fetch(`${API_BASE}/admin/reports/incident`, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",                 
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token.replace(/"/g, "")}` } : {}),
+          },
+          signal: controller.signal,
+        });
 
         if (!res.ok) {
           const txt = await res.text().catch(() => "");
@@ -67,9 +65,7 @@ export default function ReportesPage() {
     })();
 
     return () => controller.abort();
-  }
-  
-  , []);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -185,39 +181,40 @@ export default function ReportesPage() {
                 </tr>
               </thead>
               <tbody>
-                {rows.map((r) => (
-                  <tr key={r.id}>
-                    <td>{r.id}</td>
-                    <td>{r.user_id ?? "NULL"}</td>
-                    <td>{r.created}</td>
-                    <td>
-                      <span className="truncate" title={r.url || ""}>
-                        {r.url || "-"}
-                      </span>
-                    </td>
-                    <td>{r.anonymous}</td>
-                    <td>{r.admin_id ?? "-"}</td>
-                    <td>
-                      <span className={`badge-rounded ${statusBadgeClass(r.status)}`}>{r.status}</span>
-                    </td>
-                    <td>
-                      <span className={`badge-rounded ${r.published === "Published" ? "pub-yes" : "pub-no"}`}>
-                        {r.published}
-                      </span>
-                    </td>
-                    <td>
-                      <span className="truncate-sm" title={r.description || ""}>
-                        {r.description || "-"}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-                {(!loading && rows.length === 0) && (
+                {rows.length === 0 && !loading ? (
                   <tr>
                     <td colSpan={9} className="text-center py-3">
-                      Sin datos para mostrar
+                      No hay incidentes registrados
                     </td>
                   </tr>
+                ) : (
+                  rows.map((r) => (
+                    <tr key={r.id}>
+                      <td>{r.id}</td>
+                      <td>{r.user_id ?? "NULL"}</td>
+                      <td>{r.created}</td>
+                      <td>
+                        <span className="truncate" title={r.url || ""}>
+                          {r.url || "-"}
+                        </span>
+                      </td>
+                      <td>{r.anonymous}</td>
+                      <td>{r.admin_id ?? "-"}</td>
+                      <td>
+                        <span className={`badge-rounded ${statusBadgeClass(r.status)}`}>{r.status}</span>
+                      </td>
+                      <td>
+                        <span className={`badge-rounded ${r.published === "Published" ? "pub-yes" : "pub-no"}`}>
+                          {r.published}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="truncate-sm" title={r.description || ""}>
+                          {r.description || "-"}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
                 )}
               </tbody>
             </table>

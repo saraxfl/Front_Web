@@ -19,7 +19,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       const labels = r.data.labels.map((k: string) => STATUS_LABELS[k] ?? k);
       return { labels, data: r.data.data };
     }),
-    api.get("/admin//publish-ratio").then((r) => r.data),
+    api.get("/admin/reports/publish-ratio").then((r) => r.data),
   ]);
 
   return {
