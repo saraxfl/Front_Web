@@ -19,7 +19,12 @@
     "react-dom": "19.1.0",
     "simple-datatables": "^10.2.0",
     "yup": "^1.7.1"
+    "chart.js": "^4.4.1",
+    "react-chartjs-2": "^5.2.0",
+    "formik": "^2.4.6"
   },
+
+  
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/bootstrap": "^5.2.10",
