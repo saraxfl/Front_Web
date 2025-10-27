@@ -181,10 +181,12 @@ export default function ListaUsuariosPage() {
     try {
       setAddLoading(true);
       const res = await api.post("/admin/users", { name, email, password });
+      const array = new Uint32Array(1);
+      crypto.getRandomValues(array);
       const created: UserResponseDto =
         (res?.data as UserResponseDto) ??
         ({
-          id: Math.floor(Math.random() * 1_000_000),
+          id: array[0] % 1_000_000, // genera número aleatorio seguro
           email,
           is_admin: 1,
           user_status: "active",
@@ -408,4 +410,5 @@ export default function ListaUsuariosPage() {
     </div>
   );
 }
+
 
