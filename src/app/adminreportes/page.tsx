@@ -49,7 +49,7 @@ export default function AdminReportes() {
       (typeof window !== "undefined" &&
         (localStorage.getItem("accessToken") || localStorage.getItem("token"))) ||
       "";
-    return t.replace(/"/g, "");
+    return t.replaceAll(/"/g, "");
   };
 
   async function apiJSON(path: string, method: string, body?: any) {
@@ -320,12 +320,12 @@ export default function AdminReportes() {
 }
 
 function escapeHtml(s: string) {
-  return s.replace(/[&<>"']/g, (c) =>
+  return s.replaceAll(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!)
   );
 }
 function escapeAttr(s: string) {
-  return escapeHtml(s).replace(/"/g, "&quot;");
+  return escapeHtml(s).replaceAll(/"/g, "&quot;");
 }
 function statusClass(api: ApiStatus) {
   if (api === "pending") return "status-pending";
@@ -354,3 +354,4 @@ function actionMenuHtml() {
     </div>
   `;
 }
+
