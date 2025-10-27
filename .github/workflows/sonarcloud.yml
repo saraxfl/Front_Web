@@ -1,46 +1,19 @@
-name: SonarCloud
-
+name: Build
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
-
+    types: [opened, synchronize, reopened]
 jobs:
-  build-and-analyze:
-    runs-on: ubuntu-latest
-
+  sonarqube:
+    name: SonarQube
+    runs-on: windows-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Clean & install
-        run: |
-          rm -rf node_modules package-lock.json
-          npm install
-
-      - name: Verify next binary
-        run: npx --no-install next --version
-
-      # En algunos runners el bin puede quedar sin bit de ejecución: forzamos permisos
-      - name: Ensure next is executable
-        run: chmod +x node_modules/.bin/next || true
-
-      - name: Build (optional)
-        run: npm run build --if-present
-        # Si no quieres que falle el pipeline aunque falle el build:
-        # continue-on-error: true
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
