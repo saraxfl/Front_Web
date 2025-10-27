@@ -175,13 +175,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               return api(originalConfig);
             }
             await logout();
-            return Promise.reject(error);
+            return Promise.reject(error instanceof Error ? error : new Error(String(error)));
+
           } catch (e) {
             await logout();
-            return Promise.reject(e);
+            return Promise.reject(e instanceof Error ? e : new Error(String(e)));
+
           }
         }
-        return Promise.reject(error);
+        return Promise.reject(error instanceof Error ? error : new Error(String(error)));
+
       }
     );
 
@@ -212,3 +215,4 @@ export function useAuth() {
   if (!ctx) throw new Error("useAuth must be used within an AuthProvider");
   return ctx;
 }
+
