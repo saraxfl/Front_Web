@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/network/axiosConfig";
+import isEmail from "validator/lib/isEmail";
 
 // 🔹 Importa los estilos de simple-datatables (requeridos para buscador/flechas)
 import "simple-datatables/dist/style.css";
@@ -166,13 +167,13 @@ export default function ListaUsuariosPage() {
     setOkMsg(null);
 
     const name = fName.trim();
-    const email = fEmail.trim();
+    const emailTrim = (email || "").trim();
     const password = fPass;
     if (!name || !email || !password) {
       setAddErr("Completa nombre, correo y contraseña.");
       return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!emailTrim || emailTrim.length > 254 || !isEmail(emailTrim)) {
       setAddErr("Correo inválido.");
       return;
     }
@@ -407,3 +408,4 @@ export default function ListaUsuariosPage() {
     </div>
   );
 }
+
